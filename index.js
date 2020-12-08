@@ -96,7 +96,24 @@ function goals (state = [], action) {
         return state
     }
 }
+// don't add bitcoin as todo or goal
+function checkAndDispatch (store, action) {
+  if (
+    action.type === ADD_TODO &&
+    action.todo.name.toLowerCase().includes('bitcoin')
+  ) {
+    return alert("Nope. That's a bad idea.")
+  }
 
+  if (
+    action.type === ADD_GOAL &&
+    action.goal.name.toLowerCase().includes('bitcoin')
+  ) {
+    return alert("Nope. That's a bad idea.")
+  }
+
+  return store.dispatch(action)
+}
 /* function app (state = {}, action) {
     //`this func combine two reducers`
     return {
@@ -126,7 +143,12 @@ function addTodo () {
     const name = input.value
     input.value = ''
     
-    store.dispatch(addTodoAction({
+    /* store.dispatch(addTodoAction({
+      name,
+      complete: false,
+      id: generateId()
+    })) */
+    checkAndDispatch(store, addTodoAction({
       name,
       complete: false,
       id: generateId()
@@ -139,7 +161,11 @@ function addGoal () {
     const name = input.value;
     input.value = '';
 
-    store.dispatch(addGoalAction({
+    /* store.dispatch(addGoalAction({
+      id: generateId(),
+      name,
+    })) */
+    checkAndDispatch(store, addGoalAction({
       id: generateId(),
       name,
     }))
