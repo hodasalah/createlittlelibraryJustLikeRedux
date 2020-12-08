@@ -127,10 +127,11 @@ function createRemoveBTN(onClick){
 function addTodoToDom(todo){
   let node = document.createElement('li');
   let text = document.createTextNode(todo.name);
-  node.appendChild(text);
-  node.appendChild(createRemoveBTN(
+  let removeBtn=createRemoveBTN(
     ()=>store.dispatch(removeTodoAction(todo.id))
-  ));
+  );
+  node.appendChild(text);
+  node.appendChild(removeBtn);
   node.style.textDecoration= todo.complete? 'line-through' :'none';
   // setup event listner to this node 
   node.addEventListener('click' ,()=>{
@@ -138,6 +139,7 @@ function addTodoToDom(todo){
   });
   return document.getElementById('todos').appendChild(node);
 }
+//addGoalToDom
 function addGoalToDom(goal){
   let node = document.createElement('li');
   let text = document.createTextNode(goal.name);
