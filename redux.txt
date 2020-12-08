@@ -379,3 +379,28 @@ it can carry out a number of operations, including:
         #some code here
         return next(action)
     }
+[middleware === higher order function]
+=======================================
+Redux middleware leverages a concept called higher-order functions.
+A higher-order function is a function that either:
+==>
+1. accepts a function as an argument
+2. returns a function
+==>Higher-order functions are a powerful programming technique 
+that allow functions to be significantly more dynamic. 
+You've actually already written a higher-order function 
+in this course. 
+{The createRemoveButton()} function is a higher-order function 
+because the {onClick} parameter is expected to be a function 
+(because onClick is set up as an event listener callback function.
+----------------------------------------------
+add logger middleware
+=====================
+let logger =(store)=>(next)=>(action)=>{
+    console.group(action.type);
+      console.log('the action is >>', action);
+      let result= next(action);
+      console.log('new state is >>', store.getState());
+    console.groupEnd()
+    return result
+}

@@ -90,22 +90,31 @@ let checker=(store)=>(next)=>(action)=>{
     action.type === ADD_TODO &&
     action.todo.name.toLowerCase().includes('bitcoin')
   ) {
-    return alert("Nope. That's a bad idea.")
+    return alert(`Nope. That's a bad idea. ${action.todo.name}`)
   }
 
   if (
     action.type === ADD_GOAL &&
     action.goal.name.toLowerCase().includes('bitcoin')
   ) {
-    return alert("Nope. That's a bad idea.")
+    return alert(`Nope. That's a bad idea. ${action.goal.name}`)
   }
 
   return next(action)
 }
+//add another middleware
+let logger =(store)=>(next)=>(action)=>{
+  console.group(action.type);
+    console.log('the action is >>', action);
+    let result= next(action);
+    console.log('new state is >>', store.getState());
+  console.groupEnd()
+  return result
+}
 //createStore(reducer , enhancers)
 const store = Redux.createStore(
   Redux.combineReducers({todos,goals}),
-  Redux.applyMiddleware(checker)
+  Redux.applyMiddleware(checker , logger)
   )
 // generate unique ids
 function generateId () {
