@@ -3,7 +3,15 @@
 
 ===>{{Redux is a predictable state container for JavaScript apps}}
 ===> ((The whole goal of Redux is to increase predictability))
-
+[How it work]
+=============
+You’ve learned how Redux makes state management more predictable:
+in order to change the store’s state, an action describing that 
+change must be dispatched to the reducer. In turn, 
+the reducer produces the new state. 
+This new state replaces the previous state in the store. 
+So the next time store.getState() is called,
+the new, most up-to-date state is returned.
 [[\\\\\\\\\\\state tree//////////]]
 state of our app===> 
 ==========================
@@ -304,4 +312,70 @@ __>>const calculateTip = (cost, tipPercentage = 0.15) => cost * tipPercentage;
     * I/O and printing to the console. 
     * So, anything involving console.log, fs.readFile, etc., 
     is technically "impure". 
+    ========================================================
+-=middleware=-
+==================>>>>>
+!!*what happen when you want to doesn't dispatch sepecific 
+action if something happened*!!
 
+manually you can make a func like::
+[start code]
+function checkAndDispatch (store, action) {
+    #todos reducer checker
+    if (
+      action.type === ADD_TODO &&
+      action.todo.name.toLowerCase().includes('bitcoin')
+    ) {
+      return alert("Nope. That's a bad idea.")
+    }
+    #goal reducer checker
+    if (
+      action.type === ADD_GOAL &&
+      action.goal.name.toLowerCase().includes('bitcoin')
+    ) {
+      return alert("Nope. That's a bad idea.")
+    }
+  
+    return store.dispatch(action)
+}
+[end code]
+[1] when checkAndDispatch ==>{{invoked}}==>(if condition ===true )==>
+    "return" => alert("Nope. That's a bad idea.")
+[2] when checkAndDispatch ==>{{invoked}}==>(if condition ===false)==>
+    invoke==>dispatch ==> which invoke==> reducer 
+
+===> can we do this prev steps but between 
+    {dispatch  action and invoking reducer}??
+    =========================================
+    we can introduce code called [middleware] to intercept the action
+    before the reducer is invoked.
+    --------------------
+===> What is middleware ??
+    ===================
+    …a third-party extension point between dispatching an action, 
+    and the moment it reaches the reducer.
+    ----------------------
+===> Why middleware is important ??
+What's great about middleware is that once it receives the action,
+it can carry out a number of operations, including:
+
+1. producing a side effect (e.g., logging information about the store)
+2. processing the action itself (e.g., making an asynchronous HTTP request)
+3. redirecting the action (e.g., to another piece of middleware)
+4. dispatching supplementary actions
+    ----------------------------
+    ===> [How Can We Write middleware]??
+    ==============
+    let checker = (store)=>{
+        return function(next){
+            return function(action){
+                #some code here
+                return next(action);
+            }
+        }
+    }
+    {{OR}}
+    let checker=(store)=>(next)=>(action)=>{
+        #some code here
+        return next(action)
+    }

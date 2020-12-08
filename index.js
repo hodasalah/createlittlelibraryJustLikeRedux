@@ -66,7 +66,7 @@ function goals (state = [], action) {
     }
 }
 // don't add bitcoin as todo or goal
-function checkAndDispatch (store, action) {
+/* function checkAndDispatch (store, action) {
   if (
     action.type === ADD_TODO &&
     action.todo.name.toLowerCase().includes('bitcoin')
@@ -82,8 +82,31 @@ function checkAndDispatch (store, action) {
   }
 
   return store.dispatch(action)
+
+} */
+// add checker middleware
+let checker=(store)=>(next)=>(action)=>{
+  if (
+    action.type === ADD_TODO &&
+    action.todo.name.toLowerCase().includes('bitcoin')
+  ) {
+    return alert("Nope. That's a bad idea.")
+  }
+
+  if (
+    action.type === ADD_GOAL &&
+    action.goal.name.toLowerCase().includes('bitcoin')
+  ) {
+    return alert("Nope. That's a bad idea.")
+  }
+
+  return next(action)
 }
-const store = Redux.createStore(Redux.combineReducers({todos,goals}))
+//createStore(reducer , enhancers)
+const store = Redux.createStore(
+  Redux.combineReducers({todos,goals}),
+  Redux.applyMiddleware(checker)
+  )
 // generate unique ids
 function generateId () {
     return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
@@ -101,11 +124,11 @@ function addTodo () {
     const input = document.getElementById('todo')
     const name = input.value
     input.value = ''
-    checkAndDispatch(store, addTodoAction({
+    store.dispatch(addTodoAction({
       name,
       complete: false,
       id: generateId()
-    }))
+    }));
     
 }
 
@@ -113,10 +136,10 @@ function addGoal () {
     const input = document.getElementById('goal');
     const name = input.value;
     input.value = '';
-    checkAndDispatch(store, addGoalAction({
+    store.dispatch(addGoalAction({
       id: generateId(),
       name,
-    }))
+    }));
 }
 function createRemoveBTN(onClick){
   const removeBtn = document.createElement('button');
