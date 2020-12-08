@@ -1,10 +1,12 @@
-function createStore (reducer) {
+// use Redux instead of our factory function
+/* function createStore (reducer) {
   /*
     [1] state tree
     [2] way to get state (getState())
     [3] way to listen and respond to changes in state (subscribe())
     [4] way to update our state
   */
+ /*
     let state;
     let listeners = [];
     
@@ -26,7 +28,7 @@ function createStore (reducer) {
         subscribe,
         dispatch,
     }
-}
+} */
 //Constants Actions
 const ADD_TODO = 'ADD_TODO'
 const REMOVE_TODO = 'REMOVE_TODO'
@@ -95,31 +97,22 @@ function goals (state = [], action) {
     }
 }
 
-function app (state = {}, action) {
+/* function app (state = {}, action) {
     //`this func combine two reducers`
     return {
       todos: todos(state.todos, action),
       goals: goals(state.goals, action),
     }
-}
+} */
 // call our store 
-const store = createStore(app);
+// use Redux.combineReducers instead of our app func
+//const store = createStore(app);
+const store = Redux.createStore(Redux.combineReducers({todos,goals}))
 // generate unique ids
 function generateId () {
     return Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
 }
 
-/*
-    store.dispatch({
-        type: ADD_TODO,
-        todo: {
-        id: 0,
-        name: 'Learn Redux',
-        complete: false
-        }
-    })
-`change this from passed action object to pass action creator function !!`
-*/
 store.subscribe(() => {
     const {todos ,goals} = store.getState()
     document.getElementById('todos').innerHTML='';
