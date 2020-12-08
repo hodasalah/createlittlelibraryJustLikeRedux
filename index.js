@@ -1,34 +1,3 @@
-// use Redux instead of our factory function
-/* function createStore (reducer) {
-  /*
-    [1] state tree
-    [2] way to get state (getState())
-    [3] way to listen and respond to changes in state (subscribe())
-    [4] way to update our state
-  */
- /*
-    let state;
-    let listeners = [];
-    
-    const getState = () => state;
-    const subscribe = (listener) => {
-        listeners.push(listener)
-        return () => {
-          listeners = listeners.filter((l) => l !== listener)
-        }
-    }
-    // updating our store via dispatch
-    const dispatch = (action) => {
-        state = reducer(state, action)
-        listeners.forEach((listener) => listener())
-    }
-    
-    return {
-        getState,
-        subscribe,
-        dispatch,
-    }
-} */
 //Constants Actions
 const ADD_TODO = 'ADD_TODO'
 const REMOVE_TODO = 'REMOVE_TODO'
@@ -114,16 +83,6 @@ function checkAndDispatch (store, action) {
 
   return store.dispatch(action)
 }
-/* function app (state = {}, action) {
-    //`this func combine two reducers`
-    return {
-      todos: todos(state.todos, action),
-      goals: goals(state.goals, action),
-    }
-} */
-// call our store 
-// use Redux.combineReducers instead of our app func
-//const store = createStore(app);
 const store = Redux.createStore(Redux.combineReducers({todos,goals}))
 // generate unique ids
 function generateId () {
@@ -142,12 +101,6 @@ function addTodo () {
     const input = document.getElementById('todo')
     const name = input.value
     input.value = ''
-    
-    /* store.dispatch(addTodoAction({
-      name,
-      complete: false,
-      id: generateId()
-    })) */
     checkAndDispatch(store, addTodoAction({
       name,
       complete: false,
@@ -160,11 +113,6 @@ function addGoal () {
     const input = document.getElementById('goal');
     const name = input.value;
     input.value = '';
-
-    /* store.dispatch(addGoalAction({
-      id: generateId(),
-      name,
-    })) */
     checkAndDispatch(store, addGoalAction({
       id: generateId(),
       name,
