@@ -404,3 +404,36 @@ let logger =(store)=>(next)=>(action)=>{
     console.groupEnd()
     return result
 }
+-----------------------------------------------------
+[[in react.js file]]
+======================
+class App extends React.Component{
+    componentDidMount(){
+        const {store}= this.props;
+        store.subscribe(()=>this.forceUpdate());       
+    }
+    render(){
+        const {store} = this.props;
+        const {todos , goals}= store.getState();
+        return(
+            <div>
+                <Todos todos={todos} store={store}/>
+                <Goals  goals={goals} store={store}/>
+            </div>
+        )
+    }
+}
+===>
+{{this.forceUpdate()}}
+=================
+we use this react func because component render when 
+1. state changed
+OR
+2. props changed
+!!here we haven't state no state to change
+!!when we console our props it was {store}
+=========
+so if todos or goals changed props still no change 
+so we have to use this [forceUpdate()] method 
+
+
