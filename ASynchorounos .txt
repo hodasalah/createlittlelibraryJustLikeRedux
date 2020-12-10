@@ -1,0 +1,16 @@
+===>>
+JavaScript is single threaded, meaning that two bits of 
+script cannot run at the same time; 
+they have to run one after another
+===>
+[Promise]
+=========
+promise object is used for deferred and 
+asynchoronous computations {MDN}
+-----------------
+[4 words we should know]
+=================
+1. fulfilled (resolved)==>it worked
+2. Rejected ==> it didn't work
+3. Pending ==>still waiting
+4. Settled ==> something happened

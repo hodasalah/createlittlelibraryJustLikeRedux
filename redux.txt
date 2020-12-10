@@ -359,9 +359,12 @@ function checkAndDispatch (store, action) {
 What's great about middleware is that once it receives the action,
 it can carry out a number of operations, including:
 
-1. producing a side effect (e.g., logging information about the store)
-2. processing the action itself (e.g., making an asynchronous HTTP request)
-3. redirecting the action (e.g., to another piece of middleware)
+1. producing a side effect 
+    (e.g., logging information about the store)
+2. processing the action itself 
+    (e.g., making an asynchronous HTTP request)
+3. redirecting the action 
+    (e.g., to another piece of middleware)
 4. dispatching supplementary actions
     ----------------------------
     ===> [How Can We Write middleware]??
@@ -390,7 +393,7 @@ A higher-order function is a function that either:
 that allow functions to be significantly more dynamic. 
 You've actually already written a higher-order function 
 in this course. 
-{The createRemoveButton()} function is a higher-order function 
+{The createRemoveButton(onClick)} function is a higher-order function 
 because the {onClick} parameter is expected to be a function 
 (because onClick is set up as an event listener callback function.
 ----------------------------------------------
@@ -404,6 +407,8 @@ let logger =(store)=>(next)=>(action)=>{
     console.groupEnd()
     return result
 }
+const store = Redux.createStore(ourReducer ,
+    Redux.applyMiddleware(checker,logger))
 -----------------------------------------------------
 [[in react.js file]]
 ======================
@@ -435,5 +440,5 @@ OR
 =========
 so if todos or goals changed props still no change 
 so we have to use this [forceUpdate()] method 
-
+======================================================
 
