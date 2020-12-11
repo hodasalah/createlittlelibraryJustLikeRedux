@@ -5,7 +5,9 @@ const TOGGLE_TODO = 'TOGGLE_TODO'
 const ADD_GOAL = 'ADD_GOAL'
 const REMOVE_GOAL = 'REMOVE_GOAL'
 const RECEIVE_DATA = 'RECEIVE_DATA'
-
+/*==========================================
+            [[[functions creators]]]
+============================================*/
 // make action creators
 function addTodoAction (todo) {
     return {
@@ -48,6 +50,79 @@ function receiveDataAction(todos ,goals){
     goals
   }
 }
+
+//Asynchoronous ActionCreator [thunk]
+//[handle Initial Data]
+function handleInitialData(){
+  return(dispatch)=>{
+    return Promise.all([API.fetchTodos(), API.fetchGoals()])
+        .then(([todos, goals]) => {
+          dispatch(receiveDataAction(todos, goals));
+    });
+  }
+}
+//[DeleteTodoAction]
+function handleDeleteTodoAction (todo){
+  return(dispatch)=>{
+    dispatch(removeTodoAction(todo.id));
+    return API.deleteTodo(todo.id)
+      .catch(()=>{
+        dispatch(addTodoAction(todo));
+        alert("An Error occured try again");
+      })
+  }
+}
+//[DeleteGoalAction]
+function handleDeleteGoalAction (goal){
+  return(dispatch)=>{
+    dispatch(removeGoalAction(goal.id));
+    return API.deleteGoal(goal.id)
+      .catch(()=>{
+        dispatch(addGoalAction(goal));
+        alert("An Error occured try again");
+      })
+  }
+}
+//[AddTodoAction]
+function handleAddTodo(name , callback){
+  return(dispatch)=>{
+    return API.saveTodo(name)
+      .then(todo=>{
+        dispatch(addTodoAction(todo))
+        callback();
+      })
+      .catch(()=>alert('AnError occured try again'))
+  }
+}
+//[AddGoalAction]
+function handleAddGoal(name , callback){
+  return(dispatch)=>{
+    return API.saveGoal(name)
+      .then(goal=>{
+        dispatch(addGoalAction(goal))
+        callback();
+      })
+      .catch(()=>alert('AnError occured try again'))
+  }
+}
+//[toggle todo action]
+function handleToggleTodoAction(id){
+  return(dispatch)=>{
+    dispatch(toggleTodoAction(id));
+    return API.saveTodoToggle(id).catch(()=>{
+      dispatch(toggleTodoAction(id));
+      alert('An Error occured :Try Again')
+    })
+  }
+}
+/**
+ * if we don't use thunk middleware
+ * redux.min.js:1 Uncaught Error: Actions must be plain objects. 
+ * Use custom middleware for async actions.
+ */
+/*==========================================
+            [[[Reducers]]]
+============================================*/
 //todosReducer
 function todos (state = [], action) {
     switch(action.type) {
@@ -86,8 +161,11 @@ function loading(state=true , action){
       return state;
   }
 }
-// don't add bitcoin as todo or goal
 
+// don't add bitcoin as todo or goal
+/*==========================================
+            [[[middlewares]]]
+============================================*/
 // add checker middleware
 let checker=(store)=>(next)=>(action)=>{
   if (
@@ -103,10 +181,10 @@ let checker=(store)=>(next)=>(action)=>{
   ) {
     return alert(`Nope. That's a bad idea. ${action.goal.name}`)
   }
-
+  // next === dispatch
   return next(action)
 }
-//add another middleware
+//add logger middleware
 let logger =(store)=>(next)=>(action)=>{
   console.group(action.type);
     console.log('the action is >>', action);
@@ -115,10 +193,18 @@ let logger =(store)=>(next)=>(action)=>{
   console.groupEnd()
   return result
 }
+// add thunk(we will create it ) middleware
+/* const Thunk = (store)=>(next)=>(action)=>{
+  if(typeof action === 'function'){
+    return action(store.dispatch);
+  }
+  // if action === plain object
+    return next(action)
+} */
 //createStore(reducer , enhancers)
 const store = Redux.createStore(
   Redux.combineReducers({todos,goals,loading}),
-  Redux.applyMiddleware(checker , logger)
+  Redux.applyMiddleware(ReduxThunk.default,checker , logger )
   )
 // generate unique ids
 function generateId () {
