@@ -4,3 +4,4 @@
     1. started with vanilla javascript code make small (redux library)
     2. use redux library instead of my js code
     3. use react & reactDOM & babel to make react app
+    4. make cra and components
