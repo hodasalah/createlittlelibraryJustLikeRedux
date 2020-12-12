@@ -60,7 +60,7 @@ class Todos extends React.Component {
     )
   }
 } */
-const ConnectedTodos = connect((state)=>({
+const ConnectedTodos = ReactRedux.connect((state)=>({
   todos:state.todos
 }))(Todos)
 class Goals extends React.Component {
@@ -101,7 +101,7 @@ class Goals extends React.Component {
     )
   }
 } */
-const ConnectedGoals  =connect((state)=>({
+const ConnectedGoals  =ReactRedux.connect((state)=>({
   goals:state.goals
 }))(Goals)
 class App extends React.Component {
@@ -137,10 +137,10 @@ class App extends React.Component {
     )
   }
 } */
-const ConnectedApp = connect((state)=>({
+const ConnectedApp = ReactRedux.connect((state)=>({
   loading:state.loading
 }))(App)
-function connect(mapStateToProps) {
+/*function connect(mapStateToProps) {
   return (Component)=>{
     class Receiver extends React.Component{
       componentDidMount(){
@@ -170,10 +170,10 @@ function connect(mapStateToProps) {
     }
     return ConnectedComponent 
   } 
-}
-const Context = React.createContext()
+} */
+/* const Context = React.createContext() */
 
-class Provider extends React.Component {
+/* class Provider extends React.Component {
   render () {
     return (
       <Context.Provider value={this.props.store}>
@@ -181,11 +181,11 @@ class Provider extends React.Component {
       </Context.Provider>
     )
   }
-}
+} */
 
 ReactDOM.render(
-  <Provider store={store}>
+  <ReactRedux.Provider store={store}>
     <ConnectedApp />
-  </Provider>,
+  </ReactRedux.Provider>,
   document.getElementById('root')
 )
